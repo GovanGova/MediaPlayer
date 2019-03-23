@@ -5,30 +5,30 @@
 #ifndef SIGNAGE_NATIVE_LIB_H
 #define SIGNAGE_NATIVE_LIB_H
 
-#include <iostream>
-#include <string>
-#include<GLES2/gl2.h>
-#include <EGL/egl.h>
-#include <memory>
-#include <android/native_window.h>
-#include "logger.h"
-#include "../thirdparty/glm/glm.hpp"
-#include "../thirdparty/glm/gtc/matrix_transform.hpp"
-#include "../thirdparty/glm/gtc/type_ptr.hpp"
+#include "Base.h"
+#include<random>
 
 #define LOG_TAG "MediaPlayer"
+
+ 
 using namespace std;
 
+extern std::mt19937 range;
 
 //screenManager
-class screenManager{
+class screenManager
+{
 
+#ifdef __ANDROID__
     EGLDisplay _display;
-    EGLSurface  _surface;
-    EGLContext  _context;
+    EGLSurface _surface;
+    EGLContext _context;
 
     // android window, supported by NDK r5 and newer
-    ANativeWindow* _window;
+
+    ANativeWindow *_window;
+#endif
+
     glm::mat4 m_mv;
 
     glm::mat4 m_proj;
@@ -36,21 +36,17 @@ class screenManager{
     GLint width;
     GLint height;
     bool initSuccess;
+    bool m_bSurfaceResotred{false};
 
-protected:
-
+  protected:
     bool initEGL();
     bool initOpenGlES();
     void setUpMatrices();
 
-
-
     glm::vec4 clearColor;
     void setViewPort(GLfloat x, GLfloat y, GLfloat w, GLfloat h);
 
-
-
-public:
+  public:
     screenManager();
     ~screenManager();
 
@@ -59,14 +55,28 @@ public:
     void init();
     void deInit();
     bool checkES2();
-    void setWindow(ANativeWindow *window);
+
     void setRes(GLint w, GLint h);
     bool isInitedBefore();
-    int getWidth() { return width;}
-    int getHeight() {return height;}
+    int getWidth() { return width; }
+    int getHeight() { return height; }
     void destroy();
+    bool isSurfaceRestored(){ return m_bSurfaceResotred;}
+    void clearSurfaceRestored(){m_bSurfaceResotred = false;}
+
+#ifdef __ANDROID__
+    void setWindow(ANativeWindow *window);
+#endif
+    glm::mat4 getModelViewMatrix();
+    glm::mat4 getProjectionMatrix();
     glm::mat4 getModelViewProjection();
-    GLuint shapeProgram, textureProgram;
+    GLuint shapeProgram, textureProgram, ptSpritePgm;
 };
+
+#ifndef __ANDROID__
+inline void LOG_INFO(const char* data){
+  cout<<data<<endl;
+}
+#endif
 
 #endif //SIGNAGE_NATIVE_LIB_H

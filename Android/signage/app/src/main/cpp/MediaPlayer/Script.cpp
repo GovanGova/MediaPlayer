@@ -64,6 +64,11 @@ bool Script::stop() {
 }
 
 void Script::unload(){
+    std::lock_guard<std::mutex> lock(assetLock);
+    for (std::list<shared_ptr<Element>>::iterator it=assetslist.begin(); it != assetslist.end(); ++it) {
+        it->get()->unload();
+        it->get()->onWindowRestored();
+    }
 }
 
 Script::~Script(){

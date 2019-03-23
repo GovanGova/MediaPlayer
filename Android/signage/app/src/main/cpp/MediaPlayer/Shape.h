@@ -7,13 +7,13 @@
 
 #include "Element.h"
 
-class Shape: public Element {
-public:
+class Shape : public Element
+{
+  public:
     Shape(shared_ptr<screenManager> screenMng);
 
     void tick(float tSecs) override;
     void render() override;
-
 
     ~Shape();
 };

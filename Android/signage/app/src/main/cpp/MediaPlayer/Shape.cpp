@@ -7,37 +7,44 @@
 Shape::Shape(shared_ptr<screenManager> screenMng)
     : Element(screenMng)
 {
-    assetType="SHAPE";
+    m_assetType = "SHAPE";
 }
 
-void Shape::tick(float tSecs){
+void Shape::tick(float tSecs)
+{
 
     Element::tick(tSecs);
 }
 
-void Shape::render(){
+void Shape::render()
+{
 
-    glUseProgram(screenMng->shapeProgram);
-
-    glBindBuffer(GL_ARRAY_BUFFER, verBuffer);
-    GLuint vertexLoc = glGetAttribLocation(screenMng->shapeProgram,"vVertex");
+    glUseProgram(m_screenMng->shapeProgram);
+    glBindBuffer(GL_ARRAY_BUFFER, m_verBuffer);
+    GLuint vertexLoc = glGetAttribLocation(m_screenMng->shapeProgram, "vVertex");
     glEnableVertexAttribArray(vertexLoc);
-    glVertexAttribPointer(vertexLoc,3,GL_FLOAT,GL_FALSE,0,NULL);
+    glVertexAttribPointer(vertexLoc, 3, GL_FLOAT, GL_FALSE, 0, NULL);
     //glBindBuffer(GL_ARRAY_BUFFER,0);
 
-    GLuint colorLoc = glGetUniformLocation(screenMng->shapeProgram,"vColor");
-    glUniform4f(colorLoc, 1,0,0,1);
+    GLuint colorLoc = glGetUniformLocation(m_screenMng->shapeProgram, "vColor");
+    glUniform4f(colorLoc, this->m_r, this->m_g, this->m_b, this->m_a);
 
-    GLuint mvpLoc = glGetUniformLocation(screenMng->shapeProgram,"mvpMatrix");
-    glUniformMatrix4fv(mvpLoc,1,GL_FALSE, glm::value_ptr(screenMng->getModelViewProjection()));
+    GLuint mvpLoc = glGetUniformLocation(m_screenMng->shapeProgram, "mvpMatrix");
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(m_screenMng->getModelViewProjection()));
 
-    glDrawArrays(GL_TRIANGLE_FAN,0,4);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     glDisableVertexAttribArray(vertexLoc);
+        
+    //  glEnable(GL_SCISSOR_TEST);
+    //     glClearColor(0,0,0,1);
+    //     glScissor(100,100,400, 400);
+    //     glClear(GL_COLOR_BUFFER_BIT);   
 
-    //glUseProgram(0);
+
+
+    glUseProgram(0);
 }
 
-
-Shape::~Shape(){
-
+Shape::~Shape()
+{
 }

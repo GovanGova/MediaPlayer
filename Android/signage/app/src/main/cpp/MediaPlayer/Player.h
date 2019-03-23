@@ -5,25 +5,24 @@
 #ifndef SIGNAGE_PLAYER_H
 #define SIGNAGE_PLAYER_H
 
-#include<thread>
+#include <thread>
 #include "Engine.h"
 
 // Pending closing threads
 //
 
-class Player{
+class Player
+{
 
     std::thread m_rThread;
     bool isStopped, isStarted;
     std::mutex lock;
 
-protected:
-
-public:
+  protected:
+  public:
     Player();
-    Player* operator()();
+    Player *operator()();
     //thread function
-
 
     void attachMediaEngine(std::shared_ptr<Engine> engine);
 
@@ -32,6 +31,5 @@ public:
     void render();
     ~Player();
 };
-
 
 #endif //SIGNAGE_PLAYER_H

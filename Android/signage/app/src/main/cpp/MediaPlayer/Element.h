@@ -6,57 +6,59 @@
 #define SIGNAGE_ELEMENT_H
 
 #include "Dirty.h"
-#include<string>
+#include <string>
 #include "ScreenManager.h"
+#include<vector>
 
 // Base class for all asset
 // Derive and add functionality
 //
-class Element{
-private:
-    int posX, posY, width, height;
-    int posZ;
-    int alpha;
 
+class Element
+{
+  private:
+    float m_posX, m_posY, m_width, m_height, m_posZ;
 
     //Image, video or another assets which needs time to load data
-    bool isReady;
-
+    bool m_isReady;
 
     //int oID=
 
-protected:
-    GLfloat* formVertices();
-    GLuint verBuffer;
-    shared_ptr<Dirty> dirty;
-    string assetType="";
-    shared_ptr<screenManager> screenMng;
+  protected:
+    virtual std::shared_ptr<std::vector<GLfloat>> formVertices(GLuint& vertexCount);
+    GLuint m_verBuffer;
+    shared_ptr<Dirty> m_dirty;
+    string m_assetType = "";
+    shared_ptr<screenManager> m_screenMng;
+    GLfloat m_r{0}, m_g{1}, m_b{0}, m_a {1};
 
-public:
+  public:
     Element(shared_ptr<screenManager> screenMng);
 
-    void setPosX(int posX);
-    void setPosY(int posY);
-    void setPosZ(int posZ);
+    void setPosX(float posX);
+    void setPosY(float posY);
+    void setPosZ(float posZ);
 
-    int getPosX(){ return posX;}
-    int getPosY(){ return posY;}
-    int getPosZ(){ return posZ;}
-    string getAssetType(){return assetType;}
-    void setHeight(int h);
-    int getHeight(){return height;}
+    float getPosX() { return m_posX; }
+    float getPosY() { return m_posY; }
+    float getPosZ() { return m_posZ; }
 
-    void setWidth(int w);
-    int getWidth(){ return width;}
+    void setColor(GLfloat R, GLfloat G, GLfloat B, GLfloat A);
+    string getAssetType() { return m_assetType; }
+    void setHeight(float h);
+    float getHeight() { return m_height; }
 
-    void setAlpha(int a);
-    int getAlpha(){return alpha;}
+    void setWidth(float w);
+    float getWidth() { return m_width; }
+
+    void setAlpha(GLfloat a);
+    float getAlpha() { return m_a; }
 
     virtual void tick(float t);
-    virtual void render()=0;
+    virtual void render() = 0;
     virtual ~Element();
     virtual void unload();
+    virtual void onWindowRestored();
 };
-
 
 #endif //SIGNAGE_ELEMENT_H

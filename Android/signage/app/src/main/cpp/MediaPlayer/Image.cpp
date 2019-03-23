@@ -3,12 +3,12 @@
 //
 
 #include "Image.h"
-#define STB_IMAGE_IMPLEMENTATION
+//#define STB_IMAGE_IMPLEMENTATION
 //#define STBI_MALLOC
 //#define STBI_REALLOC
 //#define STBI_FREE
 
-#include "../thirdparty/other/stb_image.h"
+#include "stb/stb_image.h"
 
 
 
@@ -32,15 +32,12 @@ void Image::tick(float tSecs){
 
         int w, h, bpp;
         unsigned char* data= stbi_load(filename.c_str(), &w, &h, &bpp,0);
-        this->loadTextureData(w,h,(const void*)data, bpp);
+        loadTextureData(w,h,(const void*)data, bpp);
 
-        this->setPosX(-this->screenMng->getWidth()/2);
-        this->setPosY(-this->screenMng->getHeight()/2);
-        this->setWidth(this->screenMng->getWidth());
-        this->setHeight(this->screenMng->getHeight());
- //       uint8_t* data=new uint8_t[400*400*4];
-    //    glReadPixels(0,0,400,400,GL_RGBA,GL_UNSIGNED_BYTE,data);
-      //  loadTextureData(400,400, data);
+        //setPosX(m_screenMng->getWidth()/2);
+        //setPosY(m_screenMng->getHeight()/2);
+       // setWidth(w);
+        //setHeight(h);
         free(data);
 
         bLoadTexture=false;
@@ -50,7 +47,7 @@ void Image::render(){
     Texture::render();
 }
 void Image::unload(){
-
+    Texture::unload();
 }
 
 Image::~Image(){

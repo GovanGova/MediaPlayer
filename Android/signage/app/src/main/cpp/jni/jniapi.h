@@ -21,6 +21,8 @@ JNIEXPORT void JNICALL
 Java_com_example_g_signage_MainActivity_nativeOnPause(JNIEnv *jenv, jobject obj);
 JNIEXPORT void JNICALL
 Java_com_example_g_signage_MainActivity_nativeOnStop(JNIEnv *jenv, jobject obj);
+JNIEXPORT void JNICALL
+Java_com_example_g_signage_MainActivity_nativeOnDesroy(JNIEnv *jenv, jobject obj);
 
 JNIEXPORT jstring JNICALL
 Java_com_example_g_signage_MainActivity_stringFromJNI(JNIEnv *env, jobject obj);

@@ -5,7 +5,6 @@
 #ifndef SIGNAGE_LOGGER_H
 #define SIGNAGE_LOGGER_H
 
-
 #include <strings.h>
 #include <android/log.h>
 

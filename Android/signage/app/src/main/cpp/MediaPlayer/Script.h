@@ -7,14 +7,14 @@
 #ifndef SIGNAGE_SCRIPT_H
 #define SIGNAGE_SCRIPT_H
 
-#include<string>
-#include<list>
+#include <string>
+#include <list>
 #include "Element.h"
 #include <thread>
 #include <mutex>
 
-
-class Script{
+class Script
+{
 
     std::string m_name;
     float m_duration;
@@ -26,18 +26,18 @@ class Script{
     shared_ptr<screenManager> screenMng;
     std::mutex assetLock;
 
-public:
+  public:
     Script(shared_ptr<screenManager> screenMng);
 
-    void setName(std::string name){m_name=name;}
-    std::string getName(){ return m_name;}
-    void setDuration(float duration){m_duration=duration;};
+    void setName(std::string name) { m_name = name; }
+    std::string getName() { return m_name; }
+    void setDuration(float duration) { m_duration = duration; };
 
     void setResX(uint resX);
-    uint getResX(){ return m_resX;}
+    uint getResX() { return m_resX; }
 
     void setResY(uint resY);
-    uint getResY(){ return m_resY;}
+    uint getResY() { return m_resY; }
 
     void tick();
     void render();
@@ -59,7 +59,5 @@ public:
 
     ~Script();
 };
-
-
 
 #endif //SIGNAGE_SCRIPT_H

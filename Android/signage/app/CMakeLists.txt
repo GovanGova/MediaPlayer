@@ -9,6 +9,9 @@ cmake_minimum_required(VERSION 3.4.1)
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
+set(CMAKE_INCLUDE_DIRECTORIES_BEFORE OFF)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/thirdparty/)
+
 
 file(GLOB thirdParty
     src/main/cpp/thirdparty/*.h
@@ -68,3 +71,4 @@ target_link_libraries( # Specifies the target library.
                        EGL
                        android
                        GLESv2)
+

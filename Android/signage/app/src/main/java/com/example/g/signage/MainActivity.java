@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 //        Toast text=Toast.makeText(MainActivity.this,
 //                "destroy",
 //                Toast.LENGTH_SHORT);
-//        text.show();
+//        text.sh
         System.out.print("destroyed activity \n");
     }
 
@@ -166,8 +166,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
         if (requestCode == SELECT_PICTURE) {
             Uri selectedImageUri = data.getData();
             String selectedImagePath = selectedImageUri.getPath();
-            String realPath = ImageFilePath.getPath(MainActivity.this, data.getData());
-            Toast text=Toast.makeText(MainActivity.this,
+            String realPath = ImageFilePath.getPath(this, data.getData());
+            Toast text=Toast.makeText(this,
                     realPath,
                     Toast.LENGTH_LONG);
             text.show();
@@ -186,6 +186,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
     public static native void nativeOnStart();
     public static native void nativeOnResume();
     public static native void nativeOnPause();
+    public static native void nativeOnDesroy();
     public static native void nativeOnStop();
     public static native void nativeOnSurfaceDestroyed();
     public static native void createShape();

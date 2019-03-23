@@ -5,16 +5,17 @@
 #ifndef SIGNAGE_ENGINE_H
 #define SIGNAGE_ENGINE_H
 
-#include<list>
+#include <list>
 #include "ScreenManager.h"
 #include "Script.h"
 
-class Engine{
+class Engine
+{
     int resX, resY;
     shared_ptr<screenManager> screenMangr;
     shared_ptr<Script> playNow, playNext, playPrev;
 
-public:
+  public:
     Engine(shared_ptr<screenManager> screen);
     ~Engine();
     void clearScreen();
@@ -28,10 +29,6 @@ public:
     void loadPlayNext();
     void attachScript(shared_ptr<Script> script);
     static list<shared_ptr<Engine>> m_engines;
-
 };
-
-
-
 
 #endif //SIGNAGE_ENGINE_H

@@ -4,12 +4,9 @@
 
 #include "Player.h"
 
-
-Player::Player():
-        isStopped(false),
-        isStarted(false)
+Player::Player() : isStopped(false),
+                   isStarted(false)
 {
-
 }
 
 void Player::attachMediaEngine(std::shared_ptr<Engine> engine)
@@ -42,13 +39,16 @@ void  Player::render() {
             it->get()->render();
             it->get()->swapScreen();
         }
-       // std::unique_lock<std::mutex> lck(lock);
-        //lck.lock();
-        bRun=!isStopped;
+        {
+            std::lock_guard<std::mutex> lck(lock);
+            //lck.lock();
+            bRun = !isStopped;
+        }
     }
     LOG_INFO("Exiting thread");
 }
 void Player::startRenderingThread(){
+    std::lock_guard<std::mutex> lck(lock);
     if(!isStarted) {
         std::thread temp(&Player::render, this);
         isStopped = false;
@@ -57,16 +57,17 @@ void Player::startRenderingThread(){
         isStarted=true;
     }
 }
-void Player::stopRenderingThread(){
+void Player::stopRenderingThread()
+{
     //delete m_rThread;
-    //std::unique_lock<std::mutex> lck(lock);
+    std::lock_guard<std::mutex> lck(lock);
     //lck.lock();
     LOG_INFO("Stopping thread");
     isStopped=true;
     isStarted=false;
 }
 
-
-Player::~Player(){
+Player::~Player()
+{
     Engine::m_engines.clear();
 }

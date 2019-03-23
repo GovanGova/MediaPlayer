@@ -6,6 +6,7 @@
 #include "jniapi.h"
 #include "../MediaPlayer/Shape.h"
 #include "../MediaPlayer/Image.h"
+#include "../MediaPlayer/PointSprite.h"
 
 
 
@@ -40,7 +41,7 @@ JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_setSurface(
     }
 
     scm->setWindow(ANativeWindow_fromSurface(jenv, surface));
-    //scm->deInit();
+    //scm->init();
     player->startRenderingThread();
 
 }
@@ -61,14 +62,12 @@ JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_nativeOnStart(JNI
     }
 
     if(player==nullptr) {
+        LOG_INFO("Player is empty");
         player = new Player();
         engine = new Engine(shared_ptr<screenManager>(scm));
         script = new Script(shared_ptr<screenManager>(scm));
         engine->attachScript(shared_ptr<Script>(script));
         player->attachMediaEngine(shared_ptr<Engine>(engine));
-
-        //start rendering thread
-
 
         shared_ptr<Shape> shape(new Shape(shared_ptr<screenManager>(scm)));
         script->addAsset(shape);
@@ -78,47 +77,65 @@ JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_nativeOnStart(JNI
 
 JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_nativeOnResume(JNIEnv *jenv, jobject obj){
     //player->startRenderingThread();
+    isActivityStopped=true;
+    LOG_INFO("Resumed");
 }
 
 JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_nativeOnPause(JNIEnv *jenv, jobject obj){
-    player->stopRenderingThread();
+    //player->stopRenderingThread();
+    LOG_INFO("paused");
 }
 
 JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_nativeOnStop(JNIEnv *jenv, jobject obj){
-    //delete scm;
-
-    //isActivityStopped=true;
-   // if(scm->isInitedBefore()) {
-   //     player->stopRenderingThread();
-     //   scm->deInit();
-    //}
-
-   // delete player;
-    //delete engine;
-    //delete script;
+    isActivityStopped=true;
     LOG_INFO("stop");
 }
-int count=0;
+
+JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_nativeOnDesroy(JNIEnv *jenv, jobject obj){
+
+    if(scm->isInitedBefore()) {
+        player->stopRenderingThread();
+        scm->deInit();
+    }
+
+    delete player;
+    delete engine;
+    delete script;
+    delete scm;
+    LOG_INFO("Destroying media player");
+}
+int assetCount=0;
 JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_createShape(JNIEnv *jenv, jobject obj) {
     Shape* shape1=new Shape(shared_ptr<screenManager>(scm));
 
-    shape1->setPosX(count*10);
-    shape1->setPosY(count*10);
-    count++;
+    shape1->setPosX(assetCount*10);
+    shape1->setPosY(assetCount*10);
+    assetCount++;
     script->addAsset(shared_ptr<Shape>(shape1));
     shape1= nullptr;
 }
 
 JNIEXPORT void JNICALL Java_com_example_g_signage_MainActivity_createTexture(JNIEnv *jenv, jobject obj, jstring filename) {
 
-    Image* shape1 = new Image(shared_ptr<screenManager>(scm));
+    PointSprite* point = new PointSprite(shared_ptr<screenManager>(scm), 100);
 
+    point->setPosX(-(float)(scm->getWidth() / 2));
+    point->setPosY(-(float)(scm->getHeight() / 2));
+    point->setPosZ(0);
+    point->setWidth((float)scm->getWidth());
+    point->setBreadth(10);
+    point->setHeight((float)scm->getHeight());
+    point->setColor(1.0, 1.0, 1.0, 0.9);
+    point->setFilename(std::string(jenv->GetStringUTFChars(filename, 0)));
+//
+//    Image* point = new Image(shared_ptr<screenManager>(scm));
+//    point->setPosX(assetCount*10);
+//    point->setPosY(assetCount*10);
+//    point->setWidth(500);
+//    point->setHeight(500);
+//    point->setFilename(std::string(jenv->GetStringUTFChars(filename, 0)));
 
-    shape1->setPosX(count*10);
-    shape1->setPosY(count*10);
-    shape1->setFilename(std::string(jenv->GetStringUTFChars(filename, 0)));
-
-    count++;
-    script->addAsset(shared_ptr<Image>(shape1));
-    shape1= nullptr;
+    assetCount++;
+    script->addAsset(shared_ptr<PointSprite>(point));
+    point= nullptr;
 }
